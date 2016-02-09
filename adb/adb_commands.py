@@ -152,7 +152,7 @@ class AdbCommands(object):
       timeout_ms: Expected timeout for any part of the push.
     """
 
-    if os.path.isdir(source_file):
+    if isinstance(source_file, basestring) and os.path.isdir(source_file):
        self.Shell("mkdir " + device_filename)
        for dir_file in os.listdir(source_file):
          self.Push(os.path.join(source_file, dir_file), device_filename + "/" + dir_file)
