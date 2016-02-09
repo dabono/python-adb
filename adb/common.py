@@ -134,7 +134,14 @@ class UsbHandle(object):
 
   @property
   def port_path(self):
-    return [self._device.getBusNumber()] + self._device.getPortNumberList()
+    out = [self._device.getBusNumber()]
+    try:
+        out.extend(self._device.getPortNumberList())
+    except AttributeError:
+        # See https://codereview.chromium.org/1348703002/
+        # Work around lack of libusb1.libusb_get_port_numbers on Ubuntu 12.04
+        out.append(self._device.getDeviceAddress())
+    return out
 
   def Close(self):
     if self._handle is None:
